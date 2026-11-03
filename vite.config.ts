@@ -1,7 +1,7 @@
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 import tailwindcss from "@tailwindcss/vite";
-import { ACCENT, BOOKMAKER, GOOGLE_SITE_VERIFICATION, PROMO_CODE, SITE_NAME, SITE_URL } from "./site.config.ts";
+import { ACCENT, BOOKMAKER, GOOGLE_SITE_VERIFICATION, PROMO_CODE, SITE_NAME, SITE_URL, THEME } from "./site.config.ts";
 
 const gsc = process.env.GOOGLE_SITE_VERIFICATION || GOOGLE_SITE_VERIFICATION;
 const siteUrl = (process.env.SITE_URL || SITE_URL).replace(/\/$/, "");
@@ -17,9 +17,18 @@ function siteFiles(): Plugin {
           .replaceAll("__PROMO_CODE__", PROMO_CODE)
           .replaceAll("__BOOKMAKER__", BOOKMAKER)
           .replaceAll("__ACCENT__", ACCENT),
-      tags: gsc
-        ? [{ tag: "meta", attrs: { name: "google-site-verification", content: gsc }, injectTo: "head" as const }]
-        : [],
+      tags: [
+        {
+          tag: "style",
+          children: `:root{${Object.entries(THEME)
+            .map(([k, val]) => `--color-${k.replace(/[A-Z]/g, (m) => "-" + m.toLowerCase())}:${val}`)
+            .join(";")}}`,
+          injectTo: "head" as const,
+        },
+        ...(gsc
+          ? [{ tag: "meta", attrs: { name: "google-site-verification", content: gsc }, injectTo: "head" as const }]
+          : []),
+      ],
     }),
     generateBundle() {
       this.emitFile({

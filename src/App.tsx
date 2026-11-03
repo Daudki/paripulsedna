@@ -87,17 +87,17 @@ function App() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#05080f] text-white">
+    <div className="min-h-screen bg-bg text-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-[#05080f]/90 backdrop-blur-xl">
+      <header className="sticky top-0 z-50 border-b border-white/10 bg-bg/90 backdrop-blur-xl">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
           {/* Logo */}
           <a href="#home" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#00b37e] font-black text-white">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand font-black text-white">
               D
             </div>
             <span className="text-xl font-black tracking-tight">
-              BET<span className="text-[#00b37e]">DNA</span>
+              BET<span className="text-brand-text">DNA</span>
             </span>
           </a>
 
@@ -122,7 +122,7 @@ function App() {
               href={REGISTER_URL}
                   rel="sponsored nofollow noopener"
                   data-cta
-              className="rounded-lg bg-[#00b37e] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#12c98f]"
+              className="rounded-lg bg-brand px-5 py-2.5 text-sm font-bold text-white transition hover:bg-brand-hover"
             >
               Register
             </a>
@@ -140,7 +140,7 @@ function App() {
 
         {/* Mobile nav */}
         {menuOpen && (
-          <div className="border-t border-white/10 bg-[#05080f] px-5 py-5 md:hidden">
+          <div className="border-t border-white/10 bg-bg px-5 py-5 md:hidden">
             <nav className="flex flex-col gap-5">
               <a onClick={closeMenu} href="#sports">
                 Sports
@@ -160,7 +160,7 @@ function App() {
                 href={REGISTER_URL}
                   rel="sponsored nofollow noopener"
                   data-cta
-                className="rounded-lg bg-[#00b37e] px-5 py-3 text-center font-bold text-white"
+                className="rounded-lg bg-brand px-5 py-3 text-center font-bold text-white"
               >
                 Register
               </a>
@@ -172,19 +172,19 @@ function App() {
       <main>
         {/* Hero */}
         <section id="home" className="relative overflow-hidden">
-          <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-[#00b37e]/10 blur-3xl" />
-          <div className="pointer-events-none absolute -right-40 top-20 h-80 w-80 rounded-full bg-[#00b37e]/10 blur-3xl" />
+          <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-40 top-20 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
 
           <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
             <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#00b37e]/20 bg-[#00b37e]/10 px-3 py-1.5 text-xs font-semibold text-[#00b37e]">
-                <span className="h-1.5 w-1.5 rounded-full bg-[#00b37e]" />
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/10 px-3 py-1.5 text-xs font-semibold text-brand-text">
+                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
                 Sports Betting & Casino
               </div>
 
               <h1 className="max-w-2xl text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl">
                 Back your
-                <span className="text-[#00b37e]"> game.</span>
+                <span className="text-brand-text"> game.</span>
               </h1>
 
               <p className="mt-6 max-w-xl text-lg leading-8 text-white/60">
@@ -197,7 +197,7 @@ function App() {
                   href={REGISTER_URL}
                   rel="sponsored nofollow noopener"
                   data-cta
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#00b37e] px-6 py-3.5 font-bold text-white transition hover:bg-[#12c98f]"
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 font-bold text-white transition hover:bg-brand-hover"
                 >
                   Register Now
                   <ArrowRight size={18} />
@@ -211,8 +211,8 @@ function App() {
 
             {/* Hero visual */}
             <div className="relative">
-              <div className="rounded-3xl border border-white/10 bg-[#0a0f18] p-4 shadow-2xl shadow-black/40">
-                <div className="rounded-2xl border border-white/10 bg-[#0d1420] p-5">
+              <div className="rounded-3xl border border-white/10 bg-panel p-4 shadow-2xl shadow-black/40">
+                <div className="rounded-2xl border border-white/10 bg-surface p-5">
                   <div className="mb-6 flex items-center justify-between">
                     <div>
                       <p className="text-xs text-white/40">LIVE</p>
@@ -223,7 +223,7 @@ function App() {
                     </span>
                   </div>
 
-                  <div className="rounded-xl bg-[#070c14] p-5">
+                  <div className="rounded-xl bg-bg-alt p-5">
                     <div className="flex items-center justify-between text-sm">
                       <span>Manchester</span>
                       <span className="font-bold">2</span>
@@ -241,7 +241,7 @@ function App() {
                         key={item}
                         className={`rounded-lg border p-3 text-center ${
                           index === 0
-                            ? "border-[#00b37e]/40 bg-[#00b37e]/10 text-[#00b37e]"
+                            ? "border-brand/40 bg-brand/10 text-brand-text"
                             : "border-white/10 bg-white/[0.02]"
                         }`}
                       >
@@ -261,11 +261,11 @@ function App() {
         {/* Promotions */}
         <section
           id="promotions"
-          className="border-y border-white/10 bg-[#070c14]"
+          className="border-y border-white/10 bg-bg-alt"
         >
           <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
             <div className="max-w-2xl">
-              <p className="text-sm font-bold uppercase tracking-widest text-[#00b37e]">
+              <p className="text-sm font-bold uppercase tracking-widest text-brand-text">
                 Promotions
               </p>
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">
@@ -279,8 +279,8 @@ function App() {
 
             <div className="mt-10 grid gap-5 md:grid-cols-2">
               {/* Promo code card */}
-              <div className="rounded-2xl border border-[#00b37e]/20 bg-[#00b37e]/[0.05] p-7">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#00b37e]/10 text-[#00b37e]">
+              <div className="rounded-2xl border border-brand/20 bg-brand/[0.05] p-7">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
                   <Gift size={22} />
                 </div>
 
@@ -291,14 +291,14 @@ function App() {
                   available first-deposit bonus.
                 </p>
 
-                <div className="mt-6 flex items-center gap-3 rounded-xl border border-dashed border-[#00b37e]/40 bg-black/30 p-4">
+                <div className="mt-6 flex items-center gap-3 rounded-xl border border-dashed border-brand/40 bg-black/30 p-4">
                   <span className="font-mono text-xl font-black tracking-[0.2em] text-white">
                     {PROMO_CODE}
                   </span>
 
                   <button
                     onClick={copyCode}
-                    className="ml-auto flex items-center gap-1.5 rounded-lg bg-[#00b37e] px-4 py-2.5 text-xs font-bold text-white transition hover:bg-[#12c98f] active:scale-95"
+                    className="ml-auto flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2.5 text-xs font-bold text-white transition hover:bg-brand-hover active:scale-95"
                   >
                     {copied ? (
                       <>
@@ -338,7 +338,7 @@ function App() {
                   href={REGISTER_URL}
                   rel="sponsored nofollow noopener"
                   data-cta
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#00b37e]"
+                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-brand-text"
                 >
                   Register now
                   <ArrowRight size={16} />
@@ -376,20 +376,20 @@ function App() {
 
             <ol className="mt-6 space-y-4 text-white/60">
               <li className="flex gap-4">
-                <span className="font-mono font-bold text-[#00b37e]">01</span>
+                <span className="font-mono font-bold text-brand-text">01</span>
                 <span>
                   Click the <strong className="text-white">Register</strong>{" "}
                   button on this page.
                 </span>
               </li>
               <li className="flex gap-4">
-                <span className="font-mono font-bold text-[#00b37e]">02</span>
+                <span className="font-mono font-bold text-brand-text">02</span>
                 <span>
                   Enter your phone number and select your currency.
                 </span>
               </li>
               <li className="flex gap-4">
-                <span className="font-mono font-bold text-[#00b37e]">03</span>
+                <span className="font-mono font-bold text-brand-text">03</span>
                 <span>
                   Enter the promo code{" "}
                   <strong className="text-white">{PROMO_CODE}</strong> to unlock the
@@ -397,7 +397,7 @@ function App() {
                 </span>
               </li>
               <li className="flex gap-4">
-                <span className="font-mono font-bold text-[#00b37e]">04</span>
+                <span className="font-mono font-bold text-brand-text">04</span>
                 <span>
                   Complete verification and start betting on sports, live
                   events or casino games.
@@ -411,7 +411,7 @@ function App() {
         <section id="sports" className="border-t border-white/10">
           <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
             <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-widest text-[#00b37e]">
+              <p className="text-sm font-bold uppercase tracking-widest text-brand-text">
                 Features
               </p>
               <h2 className="mt-3 text-3xl font-black sm:text-4xl">
@@ -425,9 +425,9 @@ function App() {
                 return (
                   <div
                     key={feature.title}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition hover:-translate-y-1 hover:border-[#00b37e]/30"
+                    className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition hover:-translate-y-1 hover:border-brand/30"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#00b37e]/10 text-[#00b37e]">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
                       <Icon size={21} />
                     </div>
                     <h3 className="mt-5 font-bold">{feature.title}</h3>
@@ -442,11 +442,11 @@ function App() {
         </section>
 
         {/* Responsible gaming */}
-        <section id="casino" className="border-y border-white/10 bg-[#070c14]">
+        <section id="casino" className="border-y border-white/10 bg-bg-alt">
           <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
             <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-10">
               <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#00b37e]/10 text-[#00b37e]">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
                   <ShieldCheck size={24} />
                 </div>
                 <div>
@@ -466,7 +466,7 @@ function App() {
         <section>
           <div className="mx-auto max-w-3xl px-5 py-16">
             <div className="mb-8 text-center">
-              <CircleHelp className="mx-auto text-[#00b37e]" size={28} />
+              <CircleHelp className="mx-auto text-brand-text" size={28} />
               <h2 className="mt-3 text-3xl font-black">Need help?</h2>
             </div>
 
@@ -516,16 +516,16 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 bg-[#03060b]">
+      <footer className="border-t border-white/10 bg-deep">
         <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
           <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-[#00b37e] text-xs font-black text-white">
+                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-brand text-xs font-black text-white">
                   D
                 </div>
                 <span className="font-black">
-                  BET<span className="text-[#00b37e]">DNA</span>
+                  BET<span className="text-brand-text">DNA</span>
                 </span>
               </div>
               <p className="mt-3 text-xs text-white/30">
@@ -566,7 +566,7 @@ function App() {
           href={REGISTER_URL}
                   rel="sponsored nofollow noopener"
                   data-cta
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#00b37e] px-5 py-3.5 font-bold text-white shadow-xl shadow-black/50 transition hover:bg-[#12c98f]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3.5 font-bold text-white shadow-xl shadow-black/50 transition hover:bg-brand-hover"
         >
           <Smartphone size={18} />
           Register Now

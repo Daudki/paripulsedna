@@ -1,11 +1,24 @@
 @import "tailwindcss";
 
+/* Defaults. The real values come from THEME in site.config.ts. */
+@theme {
+  --color-brand: #c8372d;
+  --color-brand-hover: #b32e25;
+  --color-brand-text: #ff6b60;
+  --color-bg: #1b2331;
+  --color-bg-alt: #232d3f;
+  --color-surface: #2b3750;
+  --color-panel: #252f43;
+  --color-deep: #151b27;
+  --color-gold: #d4a72c;
+}
+
 html {
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #05080f;
+  background: var(--color-bg);
   font-family: Inter, system-ui, sans-serif;
 }

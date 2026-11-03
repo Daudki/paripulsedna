@@ -4,8 +4,8 @@
   "description": "Sports betting, live betting and casino.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#05080f",
-  "theme_color": "#00b37e",
+  "background_color": "#1b2331",
+  "theme_color": "#c8372d",
   "orientation": "portrait",
   "icons": [
     {
