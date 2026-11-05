@@ -1,578 +1,256 @@
-import {
-  ArrowRight,
-  Check,
-  ChevronDown,
-  CircleHelp,
-  Copy,
-  Gamepad2,
-  Gift,
-  Menu,
-  ShieldCheck,
-  Smartphone,
-  Trophy,
-  X,
-  Zap,
-} from "lucide-react";
-import { useState } from "react";
-import { useCtaTracking } from "./tracking";
+import { useState, type ReactNode } from "react";
+import { Check, ChevronDown, Copy, Gift, Gamepad2, Radio, Trophy, TriangleAlert } from "lucide-react";
 import { track } from "@vercel/analytics/react";
-import { BOOKMAKER, PROMO_CODE, REGISTER_URL, SITE_NAME } from "../site.config.ts";
+import { BOOKMAKER, LAST_UPDATED, OFFERS, PROMO_CODE, REGISTER_URL, SITE_NAME } from "../site.config.ts";
+import { useCtaTracking } from "./tracking";
 
+const OFFICIAL = {
+  bonuses: "https://paripulse.com/en/bonus/rules",
+  responsible: "https://paripulse.com/en/information/rules/31",
+};
 
-function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [copied, setCopied] = useState(false);
+const TOC = [
+  ["how-to-claim", "How to claim the bonus"],
+  ["bonuses", "Bonuses and promotions"],
+  ["offer", `What ${BOOKMAKER} offers`],
+  ["payments", "Deposits and withdrawals"],
+  ["review", "Pros and cons"],
+  ["responsible", "Play responsibly"],
+  ["faq", "FAQ"],
+] as const;
 
-  const closeMenu = () => setMenuOpen(false);
+const FAQ = [
+  [`What is the ${BOOKMAKER} promo code?`, `The promo code is ${PROMO_CODE}. Enter it in the promo code field of the registration form.`],
+  ["Where do I enter the code?", "In the registration form, in the field marked promo code (it can be optional, so it is easy to skip). Enter it before you finish signing up, because it usually can't be added afterwards."],
+  ["Can I use the code on an existing account?", "Welcome offers are meant for new accounts. Check the bonus terms on the bookmaker's site to see what applies to you."],
+  ["Do I have to deposit?", "Welcome offers normally need a qualifying first deposit. The minimum amount and the wagering rules are in the bonus terms, so read them before you accept the offer."],
+  [`Is ${BOOKMAKER} available in my country?`, "Availability and offers depend on local law and on the bookmaker's own restrictions. Check the rules where you live and the terms before you register."],
+  ["Is the bonus guaranteed?", "No. Offers and conditions are set by the bookmaker and can change at any time, so always read the current terms."],
+] as const;
 
+const FEATURES = [
+  { icon: Trophy, title: "Sports betting", text: "Football, cricket, tennis, basketball, ice hockey, volleyball and more, before the match." },
+  { icon: Radio, title: "Live betting", text: "Bet while the match is on, with a multi-match live view to follow several games." },
+  { icon: Gamepad2, title: "Casino and live casino", text: "Slots, live casino, virtual sports, esports, bingo, TV games and toto." },
+  { icon: Gift, title: "Promotions", text: "A first-deposit offer for new accounts and other promotions. Terms apply." },
+] as const;
+
+const tab = (on: boolean) =>
+  `border-b-2 px-4 py-2 text-sm font-semibold transition ${on ? "border-brand text-brand" : "border-transparent text-slate-500 hover:text-slate-800"}`;
+
+function Cta({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return (
+    <a href={REGISTER_URL} rel="sponsored nofollow noopener" data-cta
+      className={`inline-flex items-center justify-center rounded-xl bg-brand px-6 py-3.5 font-bold text-white transition hover:bg-brand-hover active:scale-95 ${className}`}>
+      {children}
+    </a>
+  );
+}
+
+const H2 = ({ id, children }: { id: string; children: ReactNode }) => (
+  <h2 id={id} className="mb-3 mt-12 scroll-mt-20 text-2xl font-black">{children}</h2>
+);
+
+export default function App() {
   useCtaTracking();
-
-  const copyCode = async () => {
-    try {
-      await navigator.clipboard.writeText(PROMO_CODE);
-    } catch {
-      const el = document.createElement("textarea");
-      el.value = PROMO_CODE;
-      el.style.position = "fixed";
-      el.style.opacity = "0";
-      document.body.appendChild(el);
-      el.select();
-      try {
-        document.execCommand("copy");
-      } catch {
-        // ignore
-      }
-      document.body.removeChild(el);
-    }
+  const [copied, setCopied] = useState(false);
+  const [which, setWhich] = useState<0 | 1>(0);
+  const copy = async () => {
+    try { await navigator.clipboard.writeText(PROMO_CODE); } catch { /* ignore */ }
     track("copy_promo_code");
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
-
-  const features = [
-    {
-      icon: Trophy,
-      title: "Sports Betting",
-      description:
-        "Football, cricket, tennis, basketball, hockey and more, before the match or live.",
-    },
-    {
-      icon: Zap,
-      title: "Live Betting",
-      description:
-        "Follow matches in real time and place bets while the action is happening.",
-    },
-    {
-      icon: Gamepad2,
-      title: "Casino",
-      description:
-        "Slots, live casino, virtual sports, bingo and TV games.",
-    },
-    {
-      icon: Gift,
-      title: "Promotions",
-      description:
-        "Enter the promo code during registration to claim the first-deposit bonus. Terms apply.",
-    },
-  ];
+  const offer = OFFERS[which];
+  const updated = new Date(LAST_UPDATED).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" });
+  const p = "mb-4 leading-relaxed text-white/75";
+  const li = "mb-2 leading-relaxed text-white/75";
 
   return (
-    <div className="min-h-screen bg-bg text-white">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-bg/90 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-5 lg:px-8">
-          {/* Logo */}
-          <a href="#home" className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand font-black text-white">
-              D
-            </div>
-            <span className="text-xl font-black tracking-tight">
-              BET<span className="text-brand-text">DNA</span>
-            </span>
-          </a>
-
-          {/* Desktop nav */}
-          <nav className="hidden items-center gap-7 md:flex">
-            <a href="#sports" className="nav-link">
-              Sports
-            </a>
-            <a href="#live" className="nav-link">
-              Live
-            </a>
-            <a href="#casino" className="nav-link">
-              Casino
-            </a>
-            <a href="/paripulse-promo-code/" className="nav-link">
-              Promo Code
-            </a>
-            <a href="#promotions" className="nav-link">
-              Promotions
-            </a>
+    <div id="top" className="min-h-screen bg-bg text-white">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-bg/90 backdrop-blur">
+        <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
+          <a href="#top" className="text-lg font-black">BET<span className="text-brand-text">DNA</span></a>
+          <nav className="hidden items-center gap-5 text-sm text-white/70 md:flex">
+            <a href="#code" className="hover:text-white">Promo code</a>
+            <a href="#how-to-claim" className="hover:text-white">How to claim</a>
+            <a href="#bonuses" className="hover:text-white">Bonuses</a>
+            <a href="#faq" className="hover:text-white">FAQ</a>
           </nav>
-
-          <div className="hidden md:block">
-            <a
-              href={REGISTER_URL}
-                  rel="sponsored nofollow noopener"
-                  data-cta
-              className="rounded-lg bg-brand px-5 py-2.5 text-sm font-bold text-white transition hover:bg-brand-hover"
-            >
-              Register
-            </a>
+          <div className="flex items-center gap-3">
+            <span className="rounded-md border border-white/20 px-1.5 py-0.5 text-xs font-bold text-white/70">18+</span>
+            <Cta className="!px-4 !py-2 text-sm">Register</Cta>
           </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="rounded-lg border border-white/10 p-2 md:hidden"
-            aria-label="Toggle menu"
-          >
-            {menuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
         </div>
-
-        {/* Mobile nav */}
-        {menuOpen && (
-          <div className="border-t border-white/10 bg-bg px-5 py-5 md:hidden">
-            <nav className="flex flex-col gap-5">
-              <a onClick={closeMenu} href="#sports">
-                Sports
-              </a>
-              <a onClick={closeMenu} href="#live">
-                Live
-              </a>
-              <a onClick={closeMenu} href="#casino">
-                Casino
-              </a>
-              <a onClick={closeMenu} href="/paripulse-promo-code/">
-                Promo Code
-              </a>
-              <a onClick={closeMenu} href="#promotions">
-                Promotions
-              </a>
-
-              <a
-                onClick={closeMenu}
-                href={REGISTER_URL}
-                  rel="sponsored nofollow noopener"
-                  data-cta
-                className="rounded-lg bg-brand px-5 py-3 text-center font-bold text-white"
-              >
-                Register
-              </a>
-            </nav>
-          </div>
-        )}
       </header>
 
-      <main>
-        {/* Hero */}
-        <section id="home" className="relative overflow-hidden">
-          <div className="pointer-events-none absolute -left-40 top-20 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
-          <div className="pointer-events-none absolute -right-40 top-20 h-80 w-80 rounded-full bg-brand/10 blur-3xl" />
+      <main className="mx-auto max-w-3xl px-4 pb-28 pt-8 md:pb-16">
+        <h1 className="text-3xl font-black leading-tight sm:text-4xl">{BOOKMAKER} Promo Code {PROMO_CODE}</h1>
+        <p className="mt-2 text-sm text-white/60">By the {SITE_NAME} editorial team · Updated {updated}</p>
 
-          <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-14 px-5 py-20 lg:grid-cols-2 lg:px-8 lg:py-28">
-            <div>
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand/10 px-3 py-1.5 text-xs font-semibold text-brand-text">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-                Sports Betting & Casino
-              </div>
 
-              <h1 className="max-w-2xl text-5xl font-black leading-[1.02] tracking-tight sm:text-6xl">
-                Back your
-                <span className="text-brand-text"> game.</span>
-              </h1>
-
-              <p className="mt-6 max-w-xl text-lg leading-8 text-white/60">
-                Register on {BOOKMAKER} in minutes and enter the promo code when you
-                sign up. Sports, live betting, slots and live casino in one place.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a
-                  href={REGISTER_URL}
-                  rel="sponsored nofollow noopener"
-                  data-cta
-                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-brand px-6 py-3.5 font-bold text-white transition hover:bg-brand-hover"
-                >
-                  Register Now
-                  <ArrowRight size={18} />
-                </a>
-              </div>
-
-              <p className="mt-5 text-xs text-white/35">
-                18+ | Please gamble responsibly.
-              </p>
-            </div>
-
-            {/* Hero visual */}
-            <div className="relative">
-              <div className="rounded-3xl border border-white/10 bg-panel p-4 shadow-2xl shadow-black/40">
-                <div className="rounded-2xl border border-white/10 bg-surface p-5">
-                  <div className="mb-6 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs text-white/40">LIVE</p>
-                      <p className="font-bold">Football</p>
-                    </div>
-                    <span className="rounded-full bg-red-500/10 px-3 py-1 text-xs font-semibold text-red-400">
-                      ● LIVE
-                    </span>
-                  </div>
-
-                  <div className="rounded-xl bg-bg-alt p-5">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>Manchester</span>
-                      <span className="font-bold">2</span>
-                    </div>
-                    <div className="my-4 h-px bg-white/10" />
-                    <div className="flex items-center justify-between text-sm">
-                      <span>United</span>
-                      <span className="font-bold">1</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    {["1", "X", "2"].map((item, index) => (
-                      <div
-                        key={item}
-                        className={`rounded-lg border p-3 text-center ${
-                          index === 0
-                            ? "border-brand/40 bg-brand/10 text-brand-text"
-                            : "border-white/10 bg-white/[0.02]"
-                        }`}
-                      >
-                        <p className="text-xs text-white/40">Odds</p>
-                        <p className="mt-1 font-bold">
-                          {index === 0 ? "1.82" : index === 1 ? "3.40" : "4.10"}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
+        <section id="code" className="mt-6 overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl">
+          <div className="border-b border-slate-200 px-5 pt-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">{BOOKMAKER} promo code</p>
+            <div className="mt-2 flex">
+              <button className={tab(which === 0)} onClick={() => setWhich(0)}>Sports</button>
+              <button className={tab(which === 1)} onClick={() => setWhich(1)}>Casino</button>
             </div>
           </div>
+          <div className="space-y-4 p-5">
+            <div className="rounded-xl border border-slate-200 p-4">
+              <p className="text-xs text-slate-500">{which === 0 ? "For sports bettors" : "For casino players"}</p>
+              <p className="text-lg font-bold">{offer.name}</p>
+              <p className="mt-1 text-sm text-slate-600">{offer.details || `See the current offer for your country on ${BOOKMAKER}.`}</p>
+            </div>
+            <button onClick={copy}
+              className="flex w-full items-center justify-between rounded-xl border-2 border-dashed border-slate-300 px-4 py-3 transition hover:border-brand">
+              <span className="text-xl font-black tracking-widest">{PROMO_CODE}</span>
+              <span className="flex items-center gap-1 text-sm font-semibold text-brand">
+                {copied ? <><Check size={16} /> Copied</> : <><Copy size={16} /> Copy</>}
+              </span>
+            </button>
+            <Cta className="w-full">Go to {BOOKMAKER}</Cta>
+            <p className="text-xs text-slate-500">Use the button above and enter the code when you register so the offer is linked to your account.</p>
+          </div>
+          <p className="border-t border-slate-200 bg-slate-50 px-5 py-3 text-xs text-slate-500">
+            T&amp;Cs: offers, eligibility, minimum deposit and wagering rules are set by {BOOKMAKER}, can change, and apply
+            in full. 18+. <a className="underline" href={OFFICIAL.bonuses} target="_blank" rel="noopener nofollow">Read the official bonus terms</a>.
+          </p>
         </section>
 
-        {/* Promotions */}
-        <section
-          id="promotions"
-          className="border-y border-white/10 bg-bg-alt"
-        >
-          <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-            <div className="max-w-2xl">
-              <p className="text-sm font-bold uppercase tracking-widest text-brand-text">
-                Promotions
-              </p>
-              <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                Get more from your account
-              </h2>
-              <p className="mt-4 text-white/50">
-                Use the promo code below when registering to claim the
-                first-deposit bonus.
-              </p>
-            </div>
+        <div className="mt-6 flex gap-3 rounded-xl border border-gold/60 bg-gold/10 p-4 text-sm">
+          <TriangleAlert className="mt-0.5 shrink-0 text-gold" size={20} />
+          <p className="text-white/80">
+            <b>18+ only.</b> Offers differ by country, change often and come with wagering rules. Check the current terms
+            on {BOOKMAKER} before you deposit. Gambling can be addictive, so play responsibly.
+          </p>
+        </div>
 
-            <div className="mt-10 grid gap-5 md:grid-cols-2">
-              {/* Promo code card */}
-              <div className="rounded-2xl border border-brand/20 bg-brand/[0.05] p-7">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
-                  <Gift size={22} />
-                </div>
+        <p className={`${p} mt-8`}>
+          The {BOOKMAKER} promo code is <b className="text-white">{PROMO_CODE}</b>. Enter it in the promo code field when you
+          register to apply the first-deposit offer shown for your country. This guide shows where to enter the code, what{" "}
+          {BOOKMAKER} offers and what to check in the terms before you accept a bonus.
+        </p>
 
-                <h3 className="mt-5 text-xl font-bold">Promo Code</h3>
-
-                <p className="mt-2 text-sm leading-6 text-white/50">
-                  Enter the promo code below during registration to claim the
-                  available first-deposit bonus.
-                </p>
-
-                <div className="mt-6 flex items-center gap-3 rounded-xl border border-dashed border-brand/40 bg-black/30 p-4">
-                  <span className="font-mono text-xl font-black tracking-[0.2em] text-white">
-                    {PROMO_CODE}
-                  </span>
-
-                  <button
-                    onClick={copyCode}
-                    className="ml-auto flex items-center gap-1.5 rounded-lg bg-brand px-4 py-2.5 text-xs font-bold text-white transition hover:bg-brand-hover active:scale-95"
-                  >
-                    {copied ? (
-                      <>
-                        <Check size={14} />
-                        Copied!
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={14} />
-                        Copy
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                <p className="mt-3 text-xs text-white/40">
-                  Use this code during registration
-                </p>
-              </div>
-
-              {/* Welcome card */}
-              <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/5">
-                  <Trophy size={22} />
-                </div>
-
-                <h3 className="mt-5 text-xl font-bold">
-                  Welcome Bonus
-                </h3>
-
-                <p className="mt-2 text-sm leading-6 text-white/50">
-                  New-user promotions may be available. Eligibility and
-                  wagering requirements apply.
-                </p>
-
-                <a
-                  href={REGISTER_URL}
-                  rel="sponsored nofollow noopener"
-                  data-cta
-                  className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-brand-text"
-                >
-                  Register now
-                  <ArrowRight size={16} />
-                </a>
-              </div>
-            </div>
+        {OFFERS.length > 0 && (
+          <div className="mb-8 overflow-x-auto rounded-2xl border border-white/10 bg-surface">
+            <table className="w-full min-w-[30rem] text-left text-sm">
+              <thead className="text-white/60"><tr><th className="p-4">Offer</th><th className="p-4">Details</th><th className="p-4">Promo code</th></tr></thead>
+              <tbody>
+                {OFFERS.map((o) => (
+                  <tr key={o.name} className="border-t border-white/10">
+                    <td className="p-4">{o.name}</td>
+                    <td className="p-4 text-white/70">{o.details || "See current offer"}</td>
+                    <td className="p-4 font-bold">{PROMO_CODE}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
-        </section>
+        )}
 
-        {/* SEO content */}
-        <section className="border-t border-white/10">
-          <div className="mx-auto max-w-4xl px-5 py-16 lg:px-8">
-            <h2 className="text-3xl font-black">
-              How to Register on {BOOKMAKER} with Promo Code {PROMO_CODE}
-            </h2>
+        <nav className="rounded-2xl border border-white/10 bg-panel p-5" aria-label="Contents">
+          <p className="mb-3 font-bold">Contents</p>
+          <ol className="list-decimal space-y-1.5 pl-5 text-sm text-white/75">
+            {TOC.map(([id, label]) => <li key={id}><a href={`#${id}`} className="hover:text-brand-text">{label}</a></li>)}
+          </ol>
+        </nav>
 
-            <p className="mt-6 leading-7 text-white/60">
-              To complete your{" "}
-              <strong className="text-white">registration</strong>, click the
-              Register button on this page. Enter your phone number, choose
-              your preferred currency, and enter the promo code{" "}
-              <strong className="text-white">{PROMO_CODE}</strong> in the promo code
-              field to claim your first-deposit bonus.
-            </p>
+        <H2 id="how-to-claim">How to claim the bonus</H2>
+        <ol className="list-decimal pl-6">
+          <li className={li}>Tap the <b>Register</b> button on this page. It opens {BOOKMAKER} through our link.</li>
+          <li className={li}>Choose how you want to sign up. The options shown depend on your country.</li>
+          <li className={li}>Enter your details accurately: your name, date of birth and contact details. {BOOKMAKER} has a know-your-customer policy, so real details avoid problems when you withdraw.</li>
+          <li className={li}>Type <b className="text-white">{PROMO_CODE}</b> in the promo code field.</li>
+          <li className={li}>Finish registering. If the offer needs a first deposit, read the bonus terms before you accept it.</li>
+        </ol>
 
-            <p className="mt-4 leading-7 text-white/60">
-              {BOOKMAKER} offers sports betting, live betting, casino games
-              and promotions to users in many countries. Registration takes less than
-              a minute and requires only your phone number.
-            </p>
+        <H2 id="bonuses">Bonuses and promotions</H2>
+        <h3 className="mb-2 mt-6 text-lg font-bold">Sports</h3>
+        <p className={p}>New accounts can claim a first-deposit bonus on sports betting. The amount, the minimum deposit and the wagering rules differ by country and by period, so check the details for your country in the table above and on the {BOOKMAKER} bonus page.</p>
+        <h3 className="mb-2 mt-6 text-lg font-bold">Casino</h3>
+        <p className={p}>Casino players can get a separate welcome offer, often spread over more than one deposit. Free spins and bonus money usually have their own wagering rules and a list of games they apply to.</p>
+        <h3 className="mb-2 mt-6 text-lg font-bold">Existing players</h3>
+        <p className={p}>{BOOKMAKER} also runs other promotions for existing accounts. They change, so look at its <a className="text-brand-text underline" href={OFFICIAL.bonuses} target="_blank" rel="noopener nofollow">promotions page</a> for what is live now.</p>
+        <h3 className="mb-2 mt-6 text-lg font-bold">No-deposit bonus</h3>
+        <p className={p}>We don't list a no-deposit offer. Be careful with any site that promises one without showing the terms.</p>
 
-            <h3 className="mt-10 text-xl font-bold">
-              Step-by-step registration
-            </h3>
+        <H2 id="offer">What {BOOKMAKER} offers</H2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {FEATURES.map(({ icon: Icon, title, text }) => (
+            <div key={title} className="rounded-2xl border border-white/10 bg-surface p-5">
+              <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-brand/15 text-brand-text"><Icon size={20} /></span>
+              <p className="font-bold">{title}</p>
+              <p className="mt-1 text-sm leading-relaxed text-white/70">{text}</p>
+            </div>
+          ))}
+        </div>
+        <p className={`${p} mt-4`}>The site is available in many languages, including Kiswahili.</p>
 
-            <ol className="mt-6 space-y-4 text-white/60">
-              <li className="flex gap-4">
-                <span className="font-mono font-bold text-brand-text">01</span>
-                <span>
-                  Click the <strong className="text-white">Register</strong>{" "}
-                  button on this page.
-                </span>
-              </li>
-              <li className="flex gap-4">
-                <span className="font-mono font-bold text-brand-text">02</span>
-                <span>
-                  Enter your phone number and select your currency.
-                </span>
-              </li>
-              <li className="flex gap-4">
-                <span className="font-mono font-bold text-brand-text">03</span>
-                <span>
-                  Enter the promo code{" "}
-                  <strong className="text-white">{PROMO_CODE}</strong> to unlock the
-                  first-deposit bonus.
-                </span>
-              </li>
-              <li className="flex gap-4">
-                <span className="font-mono font-bold text-brand-text">04</span>
-                <span>
-                  Complete verification and start betting on sports, live
-                  events or casino games.
-                </span>
-              </li>
-            </ol>
+        <H2 id="payments">Deposits and withdrawals</H2>
+        <p className={p}>Payment methods depend on your country and are shown in your account's cashier after you register. Check the available options, limits and any fees there before you deposit. You may be asked to verify your identity before a withdrawal.</p>
+
+        <H2 id="review">Pros and cons</H2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="rounded-2xl border border-white/10 bg-surface p-5">
+            <p className="mb-2 font-bold text-green-400">Pros</p>
+            <ul className="list-disc pl-5 text-sm text-white/75">
+              <li className="mb-1.5">Wide choice of sports and casino games</li>
+              <li className="mb-1.5">Live betting and a multi-match live view</li>
+              <li className="mb-1.5">Available in many languages, including Kiswahili</li>
+            </ul>
           </div>
-        </section>
-
-        {/* Features */}
-        <section id="sports" className="border-t border-white/10">
-          <div className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
-            <div className="text-center">
-              <p className="text-sm font-bold uppercase tracking-widest text-brand-text">
-                Features
-              </p>
-              <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-                Everything in one place
-              </h2>
-            </div>
-
-            <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {features.map((feature) => {
-                const Icon = feature.icon;
-                return (
-                  <div
-                    key={feature.title}
-                    className="group rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition hover:-translate-y-1 hover:border-brand/30"
-                  >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
-                      <Icon size={21} />
-                    </div>
-                    <h3 className="mt-5 font-bold">{feature.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-white/45">
-                      {feature.description}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Responsible gaming */}
-        <section id="casino" className="border-y border-white/10 bg-bg-alt">
-          <div className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-10">
-              <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand/10 text-brand-text">
-                  <ShieldCheck size={24} />
-                </div>
-                <div>
-                  <h2 className="text-xl font-bold">Play responsibly</h2>
-                  <p className="mt-2 max-w-3xl text-sm leading-6 text-white/50">
-                    Gambling involves financial risk. Set limits, only use
-                    money you can afford to lose, and take breaks when needed.
-                    This service is intended for adults aged 18 and above.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* FAQ */}
-        <section>
-          <div className="mx-auto max-w-3xl px-5 py-16">
-            <div className="mb-8 text-center">
-              <CircleHelp className="mx-auto text-brand-text" size={28} />
-              <h2 className="mt-3 text-3xl font-black">Need help?</h2>
-            </div>
-
-            <details className="group border-b border-white/10 py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
-                How do I register?
-                <ChevronDown
-                  className="transition group-open:rotate-180"
-                  size={18}
-                />
-              </summary>
-              <p className="mt-4 text-sm leading-6 text-white/45">
-                Click the Register button at the top of the page, enter your
-                phone number, select your currency, and enter the promo code
-                {PROMO_CODE} to claim your first-deposit bonus.
-              </p>
-            </details>
-
-            <details className="group border-b border-white/10 py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
-                Where do I enter the promo code?
-                <ChevronDown
-                  className="transition group-open:rotate-180"
-                  size={18}
-                />
-              </summary>
-              <p className="mt-4 text-sm leading-6 text-white/45">
-                Enter {PROMO_CODE} into the promo code field during registration. Use
-                the copy button above for convenience.
-              </p>
-            </details>
-
-            <details className="group border-b border-white/10 py-5">
-              <summary className="flex cursor-pointer list-none items-center justify-between font-semibold">
-                Can I bet while an event is live?
-                <ChevronDown
-                  className="transition group-open:rotate-180"
-                  size={18}
-                />
-              </summary>
-              <p className="mt-4 text-sm leading-6 text-white/45">
-                Live betting is available for eligible sporting events.
-              </p>
-            </details>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 bg-deep">
-        <div className="mx-auto max-w-7xl px-5 py-10 lg:px-8">
-          <div className="flex flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="flex items-center gap-2">
-                <div className="flex h-8 w-8 items-center justify-center rounded-md bg-brand text-xs font-black text-white">
-                  D
-                </div>
-                <span className="font-black">
-                  BET<span className="text-brand-text">DNA</span>
-                </span>
-              </div>
-              <p className="mt-3 text-xs text-white/30">
-                18+ | Gamble responsibly.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-5 text-xs text-white/40">
-              <a href="#home" className="hover:text-white">
-                Home
-              </a>
-              <a href="/paripulse-promo-code/" className="hover:text-white">
-                {BOOKMAKER} Promo Code
-              </a>
-              <a href="#promotions" className="hover:text-white">
-                Promotions
-              </a>
-              <a href="#casino" className="hover:text-white">
-                Responsible Gaming
-              </a>
-              <a href="#" className="hover:text-white">
-                Terms
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-8 border-t border-white/5 pt-6 text-xs text-white/20">
-            © {new Date().getFullYear()} {SITE_NAME}. All rights reserved.
-            <p className="mt-2">
-              18+ only. Gamble responsibly. {SITE_NAME} is an independent affiliate and is not {BOOKMAKER}. This site contains affiliate links; we
-              may earn a commission at no extra cost to you. Betting laws vary
-              by country, so check the rules where you live.
-            </p>
+          <div className="rounded-2xl border border-white/10 bg-surface p-5">
+            <p className="mb-2 font-bold text-brand-text">Cons</p>
+            <ul className="list-disc pl-5 text-sm text-white/75">
+              <li className="mb-1.5">Bonuses come with wagering requirements</li>
+              <li className="mb-1.5">Offers and availability differ by country</li>
+              <li className="mb-1.5">We don't list a no-deposit bonus</li>
+            </ul>
           </div>
         </div>
-      </footer>
 
-      {/* Floating mobile CTA */}
-      <div className="fixed bottom-4 left-4 right-4 z-40 md:hidden">
-        <a
-          href={REGISTER_URL}
-                  rel="sponsored nofollow noopener"
-                  data-cta
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3.5 font-bold text-white shadow-xl shadow-black/50 transition hover:bg-brand-hover"
-        >
-          <Smartphone size={18} />
-          Register Now
-        </a>
+        <H2 id="responsible">Play responsibly</H2>
+        <ul className="list-disc pl-6">
+          <li className={li}>Only bet money you can afford to lose.</li>
+          <li className={li}>Set a deposit limit before you start and stick to it.</li>
+          <li className={li}>Never chase losses and never borrow to gamble.</li>
+          <li className={li}>Take breaks, and stop if gambling stops being fun.</li>
+        </ul>
+        <p className={p}>Read the bookmaker's <a className="text-brand-text underline" href={OFFICIAL.responsible} target="_blank" rel="noopener nofollow">responsible gaming policy</a>.</p>
+
+        <H2 id="faq">FAQ</H2>
+        <div className="space-y-3">
+          {FAQ.map(([q, a]) => (
+            <details key={q} className="group rounded-xl border border-white/10 bg-white/5 p-4">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3 font-semibold">
+                {q}<ChevronDown size={18} className="shrink-0 transition group-open:rotate-180" />
+              </summary>
+              <p className="mt-3 text-sm leading-relaxed text-white/70">{a}</p>
+            </details>
+          ))}
+        </div>
+
+        <div className="mt-12 rounded-2xl border border-white/10 bg-panel p-6 text-center">
+          <p className="mb-4 text-lg font-bold">Ready to register with code {PROMO_CODE}?</p>
+          <Cta>Go to {BOOKMAKER}</Cta>
+        </div>
+      </main>
+
+      <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-white/10 bg-deep/95 px-4 py-3 backdrop-blur md:hidden">
+        <p className="text-sm text-white/70">Promo code <b className="text-white">{PROMO_CODE}</b></p>
+        <Cta className="!px-5 !py-2.5 text-sm">Go to {BOOKMAKER}</Cta>
       </div>
+
+      <footer className="border-t border-white/10 bg-deep px-4 py-8 text-center text-xs text-white/50">
+        <p>© {new Date().getFullYear()} {SITE_NAME}. All rights reserved.</p>
+        <p className="mx-auto mt-2 max-w-xl">
+          18+ only. Gamble responsibly. {SITE_NAME} is an independent affiliate and is not {BOOKMAKER}. This site contains
+          affiliate links; we may earn a commission at no extra cost to you. Betting laws vary by country, so check the
+          rules where you live.
+        </p>
+      </footer>
     </div>
   );
 }
-
-export default App;

@@ -1,0 +1,6 @@
+{
+  "redirects": [
+    { "source": "/paripulse-promo-code", "destination": "/", "permanent": true },
+    { "source": "/paripulse-promo-code/", "destination": "/", "permanent": true }
+  ]
+}
