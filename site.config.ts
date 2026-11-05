@@ -23,3 +23,13 @@ export const THEME = {
   gold: "#d4a72c", // notices
 };
 export const ACCENT = THEME.brand;
+
+// Date the promo page content was last checked against PariPulse. Update it whenever you re-check the offers.
+export const LAST_UPDATED = "2026-11-05";
+
+// Offers shown on the promo page. Leave `details` empty until you have confirmed the exact offer for
+// your code in the affiliate dashboard (amounts differ by country and change). Example: "100% up to $100".
+export const OFFERS: { name: string; details: string }[] = [
+  { name: "First-deposit sports bonus", details: "" },
+  { name: "Casino welcome offer", details: "" },
+];

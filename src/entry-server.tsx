@@ -1,4 +1,6 @@
 import { renderToString } from "react-dom/server";
 import App from "./App.tsx";
+import PromoPage from "./PromoPage.tsx";
 
-export const render = () => renderToString(<App />);
+export const renderHome = () => renderToString(<App />);
+export const renderPromo = () => renderToString(<PromoPage />);

@@ -13,7 +13,8 @@ import {
   X,
   Zap,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useCtaTracking } from "./tracking";
 import { track } from "@vercel/analytics/react";
 import { BOOKMAKER, PROMO_CODE, REGISTER_URL, SITE_NAME } from "../site.config.ts";
 
@@ -24,18 +25,7 @@ function App() {
 
   const closeMenu = () => setMenuOpen(false);
 
-  // Count clicks on every affiliate button, with the part of the page it was in.
-  useEffect(() => {
-    const onClick = (e: MouseEvent) => {
-      const a = (e.target as Element).closest("a[data-cta]");
-      if (!a) return;
-      const place =
-        a.closest("section")?.id || (a.closest("header") ? "header" : a.closest("footer") ? "footer" : "floating-button");
-      track("register_click", { place });
-    };
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
-  }, []);
+  useCtaTracking();
 
   const copyCode = async () => {
     try {
@@ -112,6 +102,9 @@ function App() {
             <a href="#casino" className="nav-link">
               Casino
             </a>
+            <a href="/paripulse-promo-code/" className="nav-link">
+              Promo Code
+            </a>
             <a href="#promotions" className="nav-link">
               Promotions
             </a>
@@ -150,6 +143,9 @@ function App() {
               </a>
               <a onClick={closeMenu} href="#casino">
                 Casino
+              </a>
+              <a onClick={closeMenu} href="/paripulse-promo-code/">
+                Promo Code
               </a>
               <a onClick={closeMenu} href="#promotions">
                 Promotions
@@ -536,6 +532,9 @@ function App() {
             <div className="flex flex-wrap gap-5 text-xs text-white/40">
               <a href="#home" className="hover:text-white">
                 Home
+              </a>
+              <a href="/paripulse-promo-code/" className="hover:text-white">
+                {BOOKMAKER} Promo Code
               </a>
               <a href="#promotions" className="hover:text-white">
                 Promotions
