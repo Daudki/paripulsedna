@@ -3,7 +3,6 @@ import { Check, ChevronDown, Copy, Gift, Gamepad2, Radio, Trophy, TriangleAlert 
 import { track } from "@vercel/analytics/react";
 import { BOOKMAKER, LAST_UPDATED, OFFERS, PROMO_CODE, REGISTER_URL, SITE_NAME } from "../site.config.ts";
 import { useCtaTracking } from "./tracking";
-import { Analytics } from "@vercel/analytics/next"
 
 const OFFICIAL = {
   bonuses: "https://paripulse.com/en/bonus/rules",
