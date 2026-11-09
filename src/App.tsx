@@ -70,7 +70,7 @@ export default function App() {
     <div id="top" className="min-h-screen bg-bg text-white">
       <header className="sticky top-0 z-30 border-b border-white/10 bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
-          <a href="#top" className="text-lg font-black">BET<span className="text-brand-text">DNA</span></a>
+          <a href="#top" className="text-lg font-black">BONUS<span className="text-brand-text">DNA</span></a>
           <nav className="hidden items-center gap-5 text-sm text-white/70 md:flex">
             <a href="#code" className="hover:text-white">Promo code</a>
             <a href="#how-to-claim" className="hover:text-white">How to claim</a>

@@ -1,6 +1,25 @@
 {
   "redirects": [
-    { "source": "/paripulse-promo-code", "destination": "/", "permanent": true },
-    { "source": "/paripulse-promo-code/", "destination": "/", "permanent": true }
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bonusdna.com"
+        }
+      ],
+      "destination": "https://bonusdna.com/$1",
+      "permanent": true
+    },
+    {
+      "source": "/paripulse-promo-code",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/paripulse-promo-code/",
+      "destination": "/",
+      "permanent": true
+    }
   ]
 }

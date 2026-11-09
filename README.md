@@ -1,4 +1,4 @@
-# BetDNA
+# BonusDNA
 
 Single-page affiliate site. No blog, no admin, no backend: just the page.
 
@@ -18,8 +18,8 @@ The build writes `sitemap.xml` and `robots.txt` with that domain. Then add the d
 Already done by the build: title, description, canonical, Open Graph and Twitter tags, `sitemap.xml`, `robots.txt`, and the page text written into the HTML so Google can read it without running JavaScript.
 
 You still have to do (needs your domain and accounts):
-1. Set the real domain in `site.config.ts` (or the `SITE_URL` variable on Vercel) and redeploy.
-2. Google Search Console: add the property, verify it (DNS, or paste the HTML-tag code into `GOOGLE_SITE_VERIFICATION`), submit `https://YOUR-DOMAIN/sitemap.xml`, then use "Request indexing" on the home page.
+1. The domain `bonusdna.com` is set in `site.config.ts`. In Vercel add `bonusdna.com` and `www.bonusdna.com` under Domains; `www` redirects to the main address (see `vercel.json`).
+2. Google Search Console: add the property, verify it (DNS, or paste the HTML-tag code into `GOOGLE_SITE_VERIFICATION`), submit `https://bonusdna.com/sitemap.xml`, then use "Request indexing" on the home page.
 3. Check the result with the URL Inspection tool in Search Console. Expect days to weeks before it ranks.
 
 ## Analytics

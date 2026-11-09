@@ -1,7 +1,7 @@
 // Everything you need to change for this site lives here.
-export const SITE_NAME = "BetDNA";
-// Your real domain, no trailing slash. You can also set SITE_URL as an environment variable on Vercel.
-export const SITE_URL = "https://your-domain.com";
+export const SITE_NAME = "BonusDNA";
+// The real domain, no trailing slash. SITE_URL can also be set as an environment variable on Vercel.
+export const SITE_URL = "https://bonusdna.com";
 export const BOOKMAKER = "PariPulse";
 export const PROMO_CODE = "DNA";
 export const REGISTER_URL =

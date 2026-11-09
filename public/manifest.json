@@ -1,6 +1,6 @@
 {
-  "name": "BetDNA",
-  "short_name": "BetDNA",
+  "name": "BonusDNA",
+  "short_name": "BonusDNA",
   "description": "Sports betting, live betting and casino.",
   "start_url": "/",
   "display": "standalone",
